@@ -25,21 +25,29 @@ const questions = [
   },
 ];
 
+const getNextQuestion = (currentQuestion) => {
+  const currentIndex = questions.findIndex(
+    (question) => question.question === currentQuestion.question
+  );
+
+  return currentIndex < questions.length ? questions[currentIndex + 1] : null;
+};
+
 function App() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [showResults, setShowResults] = useState(false);
 
   const startQuiz = () => {
-    setCurrentQuestionIndex(0);
+    setCurrentQuestion(questions[0]);
     setScore(0);
     setFeedback("");
     setShowResults(false);
   };
 
   const checkAnswer = (selectedAnswer) => {
-    const question = questions[currentQuestionIndex];
+    const question = currentQuestion;
     const isCorrect = selectedAnswer == question.answer;
 
     setFeedback(isCorrect ? "Correct!" : "Wrong!");
@@ -48,13 +56,15 @@ function App() {
     }
 
     setTimeout(() => {
-      if (currentQuestionIndex + 1 < questions.length) {
-        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      const nextQuestion = getNextQuestion(currentQuestion);
+
+      if (nextQuestion) {
+        setCurrentQuestion(nextQuestion);
         setFeedback("");
       } else {
         setShowResults(true);
       }
-    }, 2000);
+    }, 1000);
   };
 
   const renderOptions = (options) => {
@@ -95,9 +105,9 @@ function App() {
       ) : (
         <>
           <div className="quiz-container">
-            <h2>{questions[currentQuestionIndex].question}</h2>
-            {questions[currentQuestionIndex].type === "multiple_choice"
-              ? renderOptions(questions[currentQuestionIndex].options)
+            <h2>{currentQuestion.question}</h2>
+            {currentQuestion.type === "multiple_choice"
+              ? renderOptions(currentQuestion.options)
               : renderTrueFalseOptions()}
           </div>
           <div
