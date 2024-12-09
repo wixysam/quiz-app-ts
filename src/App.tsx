@@ -19,7 +19,7 @@ const questions = [
     answer: "true",
   },
   {
-    type: "english_test",
+    type: "multiple_choices",
     question: "Which planet is known as the Red Planet?",
     options: ["Earth", "Mars", "Jupiter", "Saturn"],
   },
